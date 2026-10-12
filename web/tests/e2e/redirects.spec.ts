@@ -266,6 +266,19 @@ test.describe('/company/news redirects @redirects', () => {
       '/en/company/news/2026/product-launch',
     );
   });
+
+  // Added: 2026-10-12
+  // rss.xml lives outside [locale] (app/company/news/rss.xml/route.ts) and must
+  // never be redirected to a locale-prefixed path, or the feed 404s.
+  test('/company/news/rss.xml is not redirected @redirects', async ({ request }) => {
+    const response = await request.get(`${BASE_URL}/company/news/rss.xml`, {
+      maxRedirects: 0,
+      failOnStatusCode: false,
+    });
+
+    expect(response.status(), 'Expected rss.xml to be served directly, not redirected').toBe(200);
+    expect(response.headers()['content-type']).toContain('application/rss+xml');
+  });
 });
 
 // ---------------------------------------------------------------------------

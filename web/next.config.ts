@@ -252,14 +252,16 @@ const nextConfig: NextConfig = {
       // Reason: Locale prefix required for i18n routing; bare /company/news URLs
       //         existed before locale prefix was introduced.
       //         Slug is preserved so all individual article permalinks stay valid.
+      //         rss.xml is excluded: the feed route lives outside [locale] and
+      //         must never gain a locale prefix (see app/company/news/rss.xml).
       {
         source: '/company/news',
         destination: '/en/company/news',
         permanent: true,
       },
       {
-        source: '/company/news/:slug+',
-        destination: '/en/company/news/:slug+',
+        source: '/company/news/:slug((?!rss\\.xml$).+)',
+        destination: '/en/company/news/:slug',
         permanent: true,
       },
 
