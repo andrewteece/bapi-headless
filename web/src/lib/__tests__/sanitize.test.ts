@@ -176,8 +176,22 @@ describe('stripHtml', () => {
       expect(stripHtml('just text')).toBe('just text');
     });
 
-    it('preserves HTML entities in text', () => {
-      expect(stripHtml('<p>&amp; &lt; &gt;</p>')).toBe('&amp; &lt; &gt;');
+    it('decodes basic HTML entities in text', () => {
+      expect(stripHtml('<p>&amp; &lt; &gt;</p>')).toBe('& < >');
+    });
+
+    it('decodes smart-quote and dash entities from wptexturize', () => {
+      expect(stripHtml('BAPI&#8217;s upcoming facility &#8211; groundbreaking')).toBe(
+        'BAPI\u2019s upcoming facility \u2013 groundbreaking'
+      );
+    });
+
+    it('decodes &nbsp; to a regular space', () => {
+      expect(stripHtml('&nbsp;Hello')).toBe(' Hello');
+    });
+
+    it('decodes arbitrary numeric and hex entities', () => {
+      expect(stripHtml('&#169; &#x2122;')).toBe('\u00a9 \u2122');
     });
 
     it('handles malformed/unterminated tags without throwing', () => {
