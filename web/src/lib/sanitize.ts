@@ -47,13 +47,51 @@ export function sanitizeWordPressContent(html: string | null | undefined): strin
 }
 
 /**
+ * Decodes common HTML entities that WordPress inserts via wptexturize
+ * (smart quotes, dashes, non-breaking spaces, etc.) and basic markup entities.
+ * Needed because stripHtml() output is often rendered as plain JSX text
+ * (not dangerouslySetInnerHTML), so the browser never gets to decode them.
+ */
+function decodeHtmlEntities(text: string): string {
+  const namedEntities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#039;': "'",
+    '&apos;': "'",
+    '&nbsp;': ' ',
+    '&#8217;': '\u2019', // right single quotation mark
+    '&#8216;': '\u2018', // left single quotation mark
+    '&#8220;': '\u201c', // left double quotation mark
+    '&#8221;': '\u201d', // right double quotation mark
+    '&#8211;': '\u2013', // en dash
+    '&#8212;': '\u2014', // em dash
+    '&#8230;': '\u2026', // horizontal ellipsis
+  };
+
+  let decoded = text.replace(
+    /&amp;|&lt;|&gt;|&quot;|&#039;|&apos;|&nbsp;|&#8217;|&#8216;|&#8220;|&#8221;|&#8211;|&#8212;|&#8230;/g,
+    (match) => namedEntities[match]
+  );
+
+  // Decode any remaining numeric entities (&#123; / &#x1F600;)
+  // Use fromCodePoint (not fromCharCode) so supplementary characters above
+  // U+FFFF (e.g. emoji) decode correctly instead of truncating/corrupting.
+  decoded = decoded.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)));
+  decoded = decoded.replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)));
+
+  return decoded;
+}
+
+/**
  * Strips all HTML tags from a string.
  * Use this when you need plain text only.
  * 
  * @param html - HTML string
- * @returns Plain text without HTML tags
+ * @returns Plain text without HTML tags, with HTML entities decoded
  */
 export function stripHtml(html: string | null | undefined): string {
   if (!html) return '';
-  return html.replace(/<[^>]*>/g, '');
+  return decodeHtmlEntities(html.replace(/<[^>]*>/g, ''));
 }
