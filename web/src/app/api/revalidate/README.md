@@ -29,6 +29,8 @@ Requires `REVALIDATE_SECRET` environment variable to be set and passed in the re
 - `product-list` - Product listings
 - `categories` - Product categories
 - `product-{slug}` - Specific product by slug (e.g., `product-ba10k-2-o-b5`)
+- `posts` - All news/blog post listings
+- `post-{slug}` - Specific news/blog post by slug (e.g., `post-bapi-breaks-ground-on-new-production-facility-in-da-nang-vietnam`)
 - `graphql` - All GraphQL queries
 
 ## Response

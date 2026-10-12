@@ -133,7 +133,7 @@ describe('POST /api/revalidate', () => {
 
   // ─── Allowed tags ─────────────────────────────────────────────────────────────
 
-  it.each(['products', 'product-list', 'categories', 'graphql', 'service-bulletins'])(
+  it.each(['products', 'product-list', 'categories', 'graphql', 'service-bulletins', 'posts'])(
     'accepts static whitelisted tag: %s',
     async (tag) => {
       const res = await POST(makeRequest({ secret: VALID_SECRET, tag }));
@@ -154,6 +154,18 @@ describe('POST /api/revalidate', () => {
     const res = await POST(makeRequest({ secret: VALID_SECRET, tag }));
     expect(res.status).toBe(200);
     expect(mockRevalidateTag).toHaveBeenCalledWith(tag);
+  });
+
+  it('accepts a valid dynamic post-{slug} tag', async () => {
+    const tag = 'post-bapi-breaks-ground-on-new-production-facility-in-da-nang-vietnam';
+    const res = await POST(makeRequest({ secret: VALID_SECRET, tag }));
+    expect(res.status).toBe(200);
+    expect(mockRevalidateTag).toHaveBeenCalledWith(tag);
+  });
+
+  it('rejects a post tag with uppercase letters', async () => {
+    const res = await POST(makeRequest({ secret: VALID_SECRET, tag: 'post-DaNang' }));
+    expect(res.status).toBe(400);
   });
 
   it('rejects a product tag with uppercase letters', async () => {
