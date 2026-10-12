@@ -63,18 +63,20 @@ export async function POST(request: Request) {
       'categories',
       'graphql',
       'service-bulletins',
+      'posts',
     ];
 
     // Allow content-specific tags ({content-type}-{slug})
     const isProductTag = /^product-[a-z0-9-]+$/.test(tag);
     const isServiceBulletinTag = /^service-bulletin-[a-z0-9-]+$/.test(tag);
+    const isPostTag = /^post-[a-z0-9-]+$/.test(tag);
 
-    if (!allowedTags.includes(tag) && !isProductTag && !isServiceBulletinTag) {
+    if (!allowedTags.includes(tag) && !isProductTag && !isServiceBulletinTag && !isPostTag) {
       logger.warn('revalidate.invalid_tag', { tag, clientIP });
       return NextResponse.json(
         {
           error: 'Bad Request',
-          message: `Tag '${tag}' is not allowed. Allowed tags: ${allowedTags.join(', ')}, product-{slug}, or service-bulletin-{slug}.`,
+          message: `Tag '${tag}' is not allowed. Allowed tags: ${allowedTags.join(', ')}, product-{slug}, service-bulletin-{slug}, or post-{slug}.`,
         },
         { status: 400 }
       );
