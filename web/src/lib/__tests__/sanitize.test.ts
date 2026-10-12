@@ -194,6 +194,11 @@ describe('stripHtml', () => {
       expect(stripHtml('&#169; &#x2122;')).toBe('\u00a9 \u2122');
     });
 
+    it('decodes supplementary-plane code points (above U+FFFF) without corruption', () => {
+      expect(stripHtml('&#128512;')).toBe('\u{1F600}'); // 😀
+      expect(stripHtml('&#x1F600;')).toBe('\u{1F600}');
+    });
+
     it('handles malformed/unterminated tags without throwing', () => {
       // Closed tag is stripped; unterminated tag (no closing >) is left as-is
       // because the regex <[^>]*> only matches complete <...> pairs

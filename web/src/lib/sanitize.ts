@@ -76,8 +76,10 @@ function decodeHtmlEntities(text: string): string {
   );
 
   // Decode any remaining numeric entities (&#123; / &#x1F600;)
-  decoded = decoded.replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
-  decoded = decoded.replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCharCode(parseInt(code, 16)));
+  // Use fromCodePoint (not fromCharCode) so supplementary characters above
+  // U+FFFF (e.g. emoji) decode correctly instead of truncating/corrupting.
+  decoded = decoded.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)));
+  decoded = decoded.replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)));
 
   return decoded;
 }
