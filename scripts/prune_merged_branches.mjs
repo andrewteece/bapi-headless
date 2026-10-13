@@ -20,7 +20,7 @@ if (!token) {
   process.exit(1);
 }
 
-const repoEnv = process.env.GITHUB_REPOSITORY || 'ateece-bapi/bapi-headless';
+const repoEnv = process.env.GITHUB_REPOSITORY || 'andrewteece/bapi-headless';
 const [owner, repo] = repoEnv.split('/');
 const DEFAULT_BRANCH = process.env.DEFAULT_BRANCH || 'main';
 const DRY_RUN = String(process.env.DRY_RUN || 'true') === 'true';

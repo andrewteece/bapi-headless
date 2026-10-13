@@ -74,4 +74,4 @@ curl -i -X POST \
 
 See `docs/PREVIEW-OPERATIONS.md` for full runbook, rotation steps, and troubleshooting guidance.
 
-CI status badge: [![web CI](https://github.com/ateece-bapi/bapi-headless/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ateece-bapi/bapi-headless/actions/workflows/ci.yml)
+CI status badge: [![web CI](https://github.com/andrewteece/bapi-headless/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/andrewteece/bapi-headless/actions/workflows/ci.yml)
