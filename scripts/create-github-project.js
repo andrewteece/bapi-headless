@@ -9,7 +9,7 @@ Requires: set env var GITHUB_TOKEN with repo permissions.
 
 const { Octokit } = require('@octokit/rest');
 
-const OWNER = 'ateece-bapi';
+const OWNER = 'andrewteece';
 const REPO = 'bapi-headless';
 
 // Issue numbers to import (adjust if you added/changed numbers)
